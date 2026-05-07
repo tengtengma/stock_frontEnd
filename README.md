@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 前端仪表盘
 
-## Getting Started
+本项目是基于 Next.js 的“缠论 + KNN”股票分析前端。
 
-First, run the development server:
+## 运行前准备
+
+- 后端服务已启动：`http://127.0.0.1:8000`
+- Node.js 20+
+
+## 本地运行
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+前端地址：`http://127.0.0.1:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 代理接口
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+前端通过 Next Route Handlers 代理后端接口：
 
-## Learn More
+- `POST /api/sync` -> `POST /v1/data/sync`
+- `POST /api/train` -> `POST /v1/model/train`
+- `GET /api/analyze/[symbol]` -> `GET /v1/analyze/{symbol}`
 
-To learn more about Next.js, take a look at the following resources:
+可通过环境变量设置后端地址：
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+API_BASE_URL=http://127.0.0.1:8000
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 页面流程
 
-## Deploy on Vercel
+1. 输入股票代码、日期区间和 KNN 邻居数
+2. 点击“同步数据”
+3. 点击“训练模型”
+4. 点击“开始分析”
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+页面将展示：
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- 次日上涨概率与融合信号
+- 信号说明
+- 缠论摘要（分型、笔、线段）
+- K线走势预测（`next_1d`、`next_5d`、`next_10d`）
+- 特征快照柱状图
+# stock_frontEnd
